@@ -6,6 +6,7 @@
 
 /* Global data structures */
 #define ENGINE_ADDRESS 1
+#define CHECK_DISTANCE 100
 
 unsigned char SerBuf[3], x;
 int ser_fd;
@@ -14,6 +15,8 @@ int choice;
 int valid;
 int numByteWritten;
 int bellOn;
+int distance;
+int leftStation;
 
 /* Function declarations */
 int init(void);
@@ -32,50 +35,23 @@ int main(int argc, const char* argv[])
 	printf("Starting train...\n");
 	init();
 	bellOn = 0;
+	mode=1;
 	
+	/*modes: 0=waiting to leave station, 1=departing, 2=cruising, 3=arriving at station*/
 	while(1)
 	{
-		printf("Select from the menu below:\n");
-		printf(bellOn == 0 ? "1. Start ringing the train's bell\n" : "1. Stop ringing the train's bell\n");
-		printf("2. Start the train's engine\n");
-		printf("3. Stop the train's engine\n");
-		printf("4. Exit\n\n");
-
-		choice = 0;
-		valid = 0;
-
-		/* Get menu choice: */
-		do
+		/* TODO: distance = getDistance() */
+		
+		switch(mode)
 		{
-			printf("Enter selection: ");
-			valid = scanf("%d", &choice) && choice <= 4 && choice >= 1;
-
-			if (!valid)
-			{
-				fflush(stdin);
-			}
-		} while (!valid);
-
-		/* Process input: */
-		switch (choice)
-		{
-			case 1:
-				printf(bellOn == 0 ? "Starting bell...\n" : "Stopping bell...\n");
-				ringBell();
+			case 0: break; /* TODO: wait 6000 milliseconds, then blow horn, etc. */
+			
+			case 1: if(distance>CHECK_DISTANCE) mode=2;
+				break; /*TODO: set speed relative to distance from station */
+				
+			case 2: if(distance<CHECK_DISTANCE) mode=3; 
 				break;
-			case 2:
-				printf("Starting engine...\n");
-				startEngine();
-				break;
-			case 3:
-				printf("Stopping engine...\n");
-				stopEngine();
-				break;
-			case 4:
-				return dispose();
-			default:
-				printf("Input was invalid. Please try again.\n");
-				break;
+			case 3: break; /*TODO: set speed relative to distance from station, stop when distance is very small */
 		}
 	}
 }
