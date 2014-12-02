@@ -21,6 +21,7 @@ int leftStation;
 /* Function declarations */
 int init(void);
 int dispose(void);
+int nextInput(void);
 void sendCommand(unsigned char cmd);
 void ringBell(void);
 void startEngine(void);
@@ -90,6 +91,11 @@ int dispose(void)
 	}
 
 	return -1;
+}
+
+int nextInput(void)
+{
+	
 }
 
 /*
